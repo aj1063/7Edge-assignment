@@ -1,22 +1,46 @@
 import React, { useState } from 'react'
 
+function sortByFrequency(array) {
+    var frequency = {};
+    var sortAble = [];
+    var newArr = [];
+
+    array.forEach(function (value) {
+        if (value in frequency)
+            frequency[value] = frequency[value] + 1;
+        else
+            frequency[value] = 1;
+    });
+
+
+    for (var key in frequency) {
+        sortAble.push([key, frequency[key]])
+    }
+
+    sortAble.sort(function (a, b) {
+        return b[1] - a[1]
+    })
+
+
+    sortAble.forEach(function (obj) {
+        for (var i = 0; i < obj[1]; i++) {
+            newArr.push(obj[0]);
+        }
+    })
+    return newArr;
+
+}
+
 function Frequency() {
     const [item, setItem] = useState('');
-    const [freq, setFreq] = useState({});
+    const [list, setList] = useState([]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const map = freq;
-
-        if (map[item]) {
-            map[item]++;
-            setFreq({ ...freq })
-        } else {
-            map[item] = 1;
-            setFreq({ ...freq })
-        }
+        setList([...list, item]);
     }
+
 
     return (
         <div>
@@ -30,7 +54,7 @@ function Frequency() {
             <div>
                 <ul>
                     {
-                        Object.keys(freq).map((data, index) => <li key={index}>{data} - {freq[data]}</li>)
+                        sortByFrequency(list).map((data, index) => <li key={index}>{data}</li>)
                     }
                 </ul>
 
